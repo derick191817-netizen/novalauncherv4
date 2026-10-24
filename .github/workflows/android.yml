@@ -19,16 +19,18 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # setup-android@v3 é a versão estável conhecida desta Action.
-      - uses: android-actions/setup-android@v3
+      # Atualizado para v4 para evitar bugs de compatibilidade
+      - uses: android-actions/setup-android@v4
 
       # O projeto não tem gradlew: usamos o comando global `gradle` (8.9; o AGP 8.5.2 exige 8.7+).
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
 
-      - name: Instalar plataforma e build-tools
-        run: sdkmanager "platforms;android-34" "build-tools;34.0.0"
+      # O segredo está aqui: o "yes |" aceita todas as licenças automaticamente
+      - name: Instalar plataforma e build-tools (aceitando licenças)
+        run: |
+          yes | sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
       - name: Versões
         run: |
